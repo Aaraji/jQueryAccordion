@@ -1,0 +1,36 @@
+﻿@{
+    var db = Database.Open("Northwind");
+    var sql = @"SELECT CategoryName, ProductId, ProductName FROM Categories 
+                INNER JOIN Products ON Products.CategoryId = Categories.CategoryId 
+                ORDER BY Categories.CategoryId";
+    var categories = db.Query(sql).GroupBy(p => p.CategoryName);
+}
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>Grouping data with the jQuery Accordion</title>
+        <style>body{font-size:80%;}#accordion{ width:400px;}</style>
+        <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+        <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+        <script type="text/javascript">
+            $(function(){
+                $('#accordion').accordion({ autoHeight: false });
+            });
+        </script>
+    </head>
+    <body>
+        <div id="accordion">
+            @foreach (var category in categories) {
+                <h3><a href="#">@category.Key</a></h3>
+                <div>
+                @foreach (var product in category.OrderBy(p => p.ProductName)) {
+                    <div>@product.ProductName</div>
+                }
+                </div>
+            }
+        </div>
+    </body>
+</html>

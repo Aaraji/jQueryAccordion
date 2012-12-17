@@ -1,0 +1,19 @@
+﻿@{
+    var db = Database.Open("Northwind");
+}
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title></title>
+    </head>
+    <body>
+        @foreach(var category in db.Query("SELECT * FROM Categories")){
+            <h3>@category.CategoryName</h3>
+            foreach(var product in db.Query("SELECT * FROM Products WHERE CategoryId = @0", category.CategoryId)){
+                <div>@product.ProductName</div>
+            }
+        }
+    </body>
+</html>
